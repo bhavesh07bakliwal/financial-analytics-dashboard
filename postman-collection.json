@@ -1,0 +1,161 @@
+{
+  "info": {
+    "name": "Financial Analytics Dashboard API",
+    "description": "Endpoints for the Ledger financial analytics dashboard. Auth uses an httpOnly JWT cookie set by /auth/login — Postman's cookie jar handles this automatically as long as requests are made from the same collection/session.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "http://localhost:4000/api" },
+    { "key": "demo_email", "value": "demo@financeapp.com" },
+    { "key": "demo_password", "value": "Demo@1234" },
+    { "key": "transaction_id", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{demo_email}}\",\n  \"password\": \"{{demo_password}}\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "Get Current User (me)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/auth/me", "host": ["{{base_url}}"], "path": ["auth", "me"] }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "url": { "raw": "{{base_url}}/auth/logout", "host": ["{{base_url}}"], "path": ["auth", "logout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Transactions",
+      "item": [
+        {
+          "name": "List Transactions (paginated/filtered/sorted)",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/transactions?page=1&limit=20&sortBy=date&sortOrder=desc",
+              "host": ["{{base_url}}"],
+              "path": ["transactions"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "20" },
+                { "key": "sortBy", "value": "date" },
+                { "key": "sortOrder", "value": "desc" },
+                { "key": "search", "value": "", "disabled": true },
+                { "key": "startDate", "value": "", "disabled": true },
+                { "key": "endDate", "value": "", "disabled": true },
+                { "key": "minAmount", "value": "", "disabled": true },
+                { "key": "maxAmount", "value": "", "disabled": true },
+                { "key": "category", "value": "Revenue", "disabled": true },
+                { "key": "status", "value": "Paid", "disabled": true },
+                { "key": "userId", "value": "user_001", "disabled": true }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Transaction by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "{{base_url}}/transactions/{{transaction_id}}",
+              "host": ["{{base_url}}"],
+              "path": ["transactions", "{{transaction_id}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Dashboard",
+      "item": [
+        {
+          "name": "Summary",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/dashboard/summary", "host": ["{{base_url}}"], "path": ["dashboard", "summary"] }
+          }
+        },
+        {
+          "name": "Trends (monthly revenue/expense)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/dashboard/trends", "host": ["{{base_url}}"], "path": ["dashboard", "trends"] }
+          }
+        },
+        {
+          "name": "Category Breakdown",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/dashboard/categories", "host": ["{{base_url}}"], "path": ["dashboard", "categories"] }
+          }
+        },
+        {
+          "name": "Status Breakdown",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/dashboard/status", "host": ["{{base_url}}"], "path": ["dashboard", "status"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Export Preview",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"columns\": [\"id\", \"date\", \"amount\", \"category\", \"status\", \"user_id\"],\n  \"filters\": { \"category\": \"Revenue\", \"status\": \"Paid\" }\n}"
+            },
+            "url": { "raw": "{{base_url}}/reports/export/preview", "host": ["{{base_url}}"], "path": ["reports", "export", "preview"] }
+          }
+        },
+        {
+          "name": "Export CSV",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"columns\": [\"id\", \"date\", \"amount\", \"category\", \"status\", \"user_id\"],\n  \"filters\": { \"category\": \"Revenue\", \"status\": \"Paid\" }\n}"
+            },
+            "url": { "raw": "{{base_url}}/reports/export", "host": ["{{base_url}}"], "path": ["reports", "export"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{base_url}}/health", "host": ["{{base_url}}"], "path": ["health"] }
+          }
+        }
+      ]
+    }
+  ]
+}
